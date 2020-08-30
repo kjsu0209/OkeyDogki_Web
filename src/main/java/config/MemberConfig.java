@@ -22,7 +22,7 @@ public class MemberConfig {
 		ds.setDriverClassName("com.mysql.jdbc.Driver");
 		ds.setUrl("jdbc:mysql://localhost/okdog_db?characterEncoding=utf8");
 		ds.setUsername("root");
-		ds.setPassword("azza0209");
+		ds.setPassword("0000");
 		ds.setInitialSize(2);
 		ds.setMaxActive(10);
 		ds.setTestWhileIdle(true);
@@ -54,6 +54,7 @@ public class MemberConfig {
 		pwdSvc.setMemberDao(memberDao());
 		return pwdSvc;
 	}
+<<<<<<< HEAD
 	
 	@Bean
 	public AuthService authService() {
@@ -62,3 +63,6 @@ public class MemberConfig {
 		return authService;
 	}
 }
+=======
+}
+>>>>>>> 731f22236acbbdfac417617addb5924430e2fd17
