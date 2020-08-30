@@ -4,25 +4,27 @@ import java.time.LocalDateTime;
 
 public class Member {
 
-	private Long id;
+	private int id;
 	private String email;
 	private String password;
 	private String name;
+	private String city;
 	private LocalDateTime registerDateTime;
 
 	public Member(String email, String password, 
-			String name, LocalDateTime regDateTime) {
+			String name, String city, LocalDateTime regDateTime) {
 		this.email = email;
 		this.password = password;
 		this.name = name;
+		this.city = city;
 		this.registerDateTime = regDateTime;
 	}
 
-	void setId(Long id) {
+	void setId(int id) {
 		this.id = id;
 	}
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 
@@ -46,6 +48,18 @@ public class Member {
 		if (!password.equals(oldPassword))
 			throw new WrongIdPasswordException();
 		this.password = newPassword;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+	
+	public boolean matchPassword(String password) {
+		return this.password.equals(password);
 	}
 
 }

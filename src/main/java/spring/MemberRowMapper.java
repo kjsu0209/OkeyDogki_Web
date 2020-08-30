@@ -11,10 +11,11 @@ public class MemberRowMapper implements RowMapper<Member> {
 	public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Member member = new Member(
 				rs.getString("EMAIL"),
-				rs.getString("PASSWORD"),
-				rs.getString("NAME"),
+				rs.getString("user_pwd"),
+				rs.getString("user_name"),
+				rs.getString("user_city"),
 				rs.getTimestamp("REGDATE").toLocalDateTime());
-		member.setId(rs.getLong("ID"));
+		member.setId(rs.getInt("user_id"));
 		return member;
 	}
 

@@ -24,7 +24,7 @@ public class MemberDao {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
-	private static long nextId = 0;
+	private static int nextId = 0;
 
 	private Map<String, Member> map = new HashMap<>();
 
@@ -32,20 +32,24 @@ public class MemberDao {
 		List<Member> results = jdbcTemplate.query(
 				"select * from okdog_db.user where EMAIL = ?", 
 				new RowMapper<Member>() {
-
 					@Override
 					public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
 						Member member = new Member(
 								rs.getString("email"),
 								rs.getString("user_pwd"),
 								rs.getString("user_name"),
+								rs.getString("user_city"),
 								rs.getTimestamp("regdate").toLocalDateTime());
-						member.setId(rs.getLong("ID"));
+						member.setId(rs.getInt("user_id"));
 						return member;
 					}
 					
 				}, email);
-		return results.get(0);
+		System.out.println(results.toString());
+		if(results.size()>0)
+			return results.get(0);
+		else
+			return null;
 	}
 
 	public void insert(Member member) {
@@ -55,35 +59,36 @@ public class MemberDao {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				// TODO Auto-generated method stub
-				PreparedStatement pstmt = con.prepareStatement("insert into okdog_db.user (email, user_pwd, user_name, regdate) values (?, ?, ?, ?)", new String[] {"id"} );
+				PreparedStatement pstmt = con.prepareStatement("insert into user (email, user_pwd, user_name, user_city, regdate) values (?, ?, ?, ?, ?)", new String[] {"id"} );
 				//인덱스 파라미터 값 설정
 				pstmt.setString(1, member.getEmail());
 				pstmt.setString(2, member.getPassword());
 				pstmt.setString(3, member.getName());
-				pstmt.setTimestamp(4, Timestamp.valueOf(member.getRegisterDateTime()));
+				pstmt.setString(4, member.getCity());
+				pstmt.setTimestamp(5, Timestamp.valueOf(member.getRegisterDateTime()));
 				return pstmt;
 			}
 			
 		}, keyHolder);
 		Number keyValue = keyHolder.getKey();
-		member.setId(keyValue.longValue());
+		member.setId(keyValue.intValue());
 	}
 
 	public void update(Member member) {
-		jdbcTemplate.update("update okdog_db.user set user_name=?, user_pwd=? where email=?", member.getName(), member.getPassword(), member.getEmail());
+		jdbcTemplate.update("update user set user_name=?, user_pwd=? where email=?", member.getName(), member.getPassword(), member.getEmail());
 		
 	}
 	
 	public List<Member> selectAll(){
 		List<Member> results = jdbcTemplate.query(
-				"select * from okdog_db.user",
+				"select * from user",
 				new MemberRowMapper());
 		return results;
 	}
 
 	public int count1() {
 		List<Integer> results = jdbcTemplate.query(
-				"select count(*) from okdog_db.user",
+				"select count(*) from user",
 				new RowMapper<Integer>() {
 					@Override
 					public Integer mapRow(ResultSet rs, int rowNum) throws SQLException{
@@ -95,7 +100,7 @@ public class MemberDao {
 	
 	public int count() {
 		//하나만 받기 때문에 mapping을 안해줘도 된다.
-		Integer count = jdbcTemplate.queryForObject("select count(*) from okdog_db.user", Integer.class);
+		Integer count = jdbcTemplate.queryForObject("select count(*) from user", Integer.class);
 		return count;
 	}
 }

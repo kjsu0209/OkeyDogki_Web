@@ -1,11 +1,24 @@
 package spring;
 
-public class RegisterRequest {
+import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
+public class RegisterRequest {
+	//Bean Validation annotation
+	@NotBlank
+	@Email
 	private String email;
+	@Size(min=6)
 	private String password;
+	@NotEmpty
 	private String confirmPassword;
+	@NotEmpty
 	private String name;
+	@NotEmpty
+	private String city;
 
 	public String getEmail() {
 		return email;
@@ -41,5 +54,13 @@ public class RegisterRequest {
 
 	public boolean isPasswordEqualToConfirmPassword() {
 		return password.equals(confirmPassword);
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 }
